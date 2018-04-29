@@ -114,3 +114,39 @@ function goEdit() {
   db.transaction(editRow, errorCB);
   document.getElementById('qrpopup').style.display='none';
 }
+
+function goDiscard() {
+  document.getElementById('qrpopup').style.display='none';
+}
+
+//inputs handler
+
+//goInsert();
+document.querySelector('.go-insert').addEventListener('click', function() {
+  goInsert();
+});
+
+//goSearch()
+document.querySelector('.go-search').addEventListener('click', function() {
+  goSearch();
+});
+
+//go-successCB
+document.querySelector('.go-successCB').addEventListener('click', function() {
+  successCB();
+});
+
+//go-delete
+document.querySelector('.go-delete').addEventListener('click', function() {
+  goDelete();
+});
+
+//go-edit
+document.querySelector('.go-edit').addEventListener('click', function() {
+  goEdit();
+});
+
+//discard
+document.querySelector('#discard').addEventListener('click', function() {
+  goDiscard();
+});
