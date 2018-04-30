@@ -59,7 +59,7 @@
             // Populate the phone_gap
             //
             function populateDB(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT, name,number)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT, name,number,date)');
             }
 
             // Query the phone_gap
@@ -77,8 +77,10 @@
                 var tblText='<table id="t01"><tr><th>ID</th> <th>Name</th> <th>Number</th> <th>Date</th></tr>';
                 var len = results.rows.length;
                 for (var i = 0; i < len; i++) {
-                    var tmpArgs=results.rows.item(i).id + ",'" + results.rows.item(i).name + "','" + results.rows.item(i).number+"'";
-                    tblText +='<tr onclick="goPopup('+ tmpArgs + ');"><td>' + results.rows.item(i).id +'</td><td>' + results.rows.item(i).name +'</td><td>' + results.rows.item(i).number +'</td></tr>';
+                    //var tmpArgs=results.rows.item(i).id + ",'" + results.rows.item(i).name + "','" + results.rows.item(i).number+"'";
+                    var tmpArgs=results.rows.item(i).id + ",'" + results.rows.item(i).name + "','" + results.rows.item(i).number + "'" + results.rows.item(i).date + "" ;
+                    //tblText +='<tr onclick="goPopup('+ tmpArgs + ');"><td>' + results.rows.item(i).id +'</td><td>' + results.rows.item(i).name +'</td><td>' + results.rows.item(i).number +'</td></tr>';
+                    tblText +='<tr onclick="goPopup('+ tmpArgs + ');"><td>' + results.rows.item(i).id +'</td><td>' + results.rows.item(i).name +'</td><td>' + results.rows.item(i).number + '</td><td>' + results.rows.item(i).date + '</td></tr>';
                 }
                 tblText +="</table>";
                 document.getElementById("tblDiv").innerHTML =tblText;
@@ -112,8 +114,10 @@
             //Insert query
             //
             function insertDB(tx) {
-              tx.executeSql('INSERT INTO DEMO (name,number) VALUES ("' +document.getElementById("txtName").value
-              +'","'+document.getElementById("txtNumber").value+'")');
+                var kkk = 'AA';
+                //var actual_date = new Date;
+              // tx.executeSql('INSERT INTO DEMO (name,number,date) VALUES ("' + document.getElementById("txtName").value + '","' + document.getElementById("txtNumber").value + '")');
+                tx.executeSql('INSERT INTO DEMO (name,number,date) VALUES ("' + document.getElementById("txtName").value + '","' + document.getElementById("txtNumber").value + '","' + kkk + '")');
             }
 
             function goInsert() {
