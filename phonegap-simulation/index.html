@@ -21,29 +21,71 @@
 
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <title>NextWells App</title>
+    
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
 </head>
 
 <body>
-    <h1>NextWells App Version 1.0</h1>
-    <p>Local Database</p>
-    <div id="qrpopup" > //The hidden div tag for implementing the popup
+    <h1>NextWells App Version 1.4</h1>
+    <p>Local Database and Remote Database</p>
+
+    <!-- The hidden div tag for implementing the popup -->
+    <div id="qrpopup" > 
             <hr/>
             <input type="text" id="editNameBox"><br>
             <input type="text" id="editNumberBox"><br>
             <button onclick="goDelete()">Delete</button>
-            <button onclick="goEdit()">Edit</button> 
+            <button onclick="goEdit()">Edit</button>
             <button onclick="document.getElementById('qrpopup').style.display='none';">Discard</button>
     </div>
 
-    <div>
-        Name<input type="text" value="" id="txtName">
-        Number<input type="text" value="" id="txtNumber"><hr/>
+    <!-- Data entry -->
+    <div id="data-input">
+        <dl>
+            <dt>Name</dt>
+                <dd><input type="text" value="" id="txtName"></dd>
+                <br/><br/>
+            <dt>Number</dt>
+                <dd><input type="text" value="" id="txtNumber"></dd>
+                <br/><br/>
+            <dt>Number2</dt>
+                <dd><input type="text" value="" id="txtNumber1"></dd>
+            <br/><br/>
+            <dt>Number3</dt>
+                <dd><input type="text" value="" id="txtNumber2"></dd>
+            <br/><br/>
+            <dt>Number4</dt>
+                <dd><input type="text" value="" id="txtNumber3"></dd>
+        </dl>
     </div>
+
+    <!-- Insert - Search - Show All buttons -->
     <div id="tblDiv"></div>
     <div style="text-align: center">
-        <button onclick="goInsert()">Insert</button>
+        <!-- goInsert(0) means insert value from insert button-->
+        <button onclick="goInsert(0)">Insert</button>
         <button onclick="goSearch()">Search</button>
         <button onclick="successCB()">Show All</button>
+        <!-- goInsert(1) means insert value from internet-->
+        <!-- <button onclick="fetchData()">Fetch Data</button> -->
+        <button onclick="goInsert(1)">Fetch Data</button>
+    </div>
+
+    <!-- Calendar form section -->
+    <table class="ds_box" cellpadding="0" cellspacing="0" id="ds_conclass" style="display: none;">
+        <tr>
+            <td id="ds_calclass"></td>
+        </tr>
+    </table>
+    <div class="form-center">
+        <form name="myForm" action="" method="post">
+            <div>
+                  <hr/>
+                  <b>Please tap to pick a date and press <em>Search</em> button</b><input onclick="ds_sh(this);" name="date" readonly="readonly" style="cursor: text" /><br /><br />
+            </div>
+        </form>
     </div>
     <script type="text/javascript">
 
@@ -54,119 +96,447 @@
 
             //reads data base when starts index.html
             onDeviceReady();
+        var currentRow;
+        var value = -1;
+        var response = '';
 
-            var currentRow;
-            // Populate the phone_gap
-            //
-            function populateDB(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT, name,number,date)');
-            }
+        // Populate the phone_gap
+        //
+        function populateDB(tx) {
+           tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT, name,number,number2,number3,number4)');
+        }
 
-            // Query the phone_gap
-            //
-            function queryDB(tx) {
-                tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
-            }
+        // Query the phone_gap
+        //
+        function queryDB(tx) {
+           tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
+        }
 
-            function searchQueryDB(tx) {
-                tx.executeSql("SELECT * FROM DEMO where name like ('%"+ document.getElementById("txtName").value + "%')", [], querySuccess, errorCB);
-            }
-            // Query the success callback
-            //
-            function querySuccess(tx, results) {
-                var tblText='<table id="t01"><tr><th>ID</th> <th>Name</th> <th>Number</th> <th>Date</th></tr>';
-                var len = results.rows.length;
-                for (var i = 0; i < len; i++) {
-                    //var tmpArgs=results.rows.item(i).id + ",'" + results.rows.item(i).name + "','" + results.rows.item(i).number+"'";
-                    var tmpArgs=results.rows.item(i).id + ",'" + results.rows.item(i).name + "','" + results.rows.item(i).number + "','" + results.rows.item(i).date + "'" ;
-                    //tblText +='<tr onclick="goPopup('+ tmpArgs + ');"><td>' + results.rows.item(i).id +'</td><td>' + results.rows.item(i).name +'</td><td>' + results.rows.item(i).number +'</td></tr>';
-                    tblText +='<tr onclick="goPopup('+ tmpArgs + ');"><td>' + results.rows.item(i).id +'</td><td>' + results.rows.item(i).name +'</td><td>' + results.rows.item(i).number + '</td><td>' + results.rows.item(i).date + '</td></tr>';
+        function searchQueryDB(tx) {
+
+           tx.executeSql("SELECT * FROM DEMO where date like ('%" + document.forms["myForm"]["date"].value + "%')", [], querySuccess, errorCB);
+           // cleans form data
+           document.forms["myForm"]["date"].value = ' ';
+        }
+        // Query the success callback
+        //
+        function querySuccess(tx, results) {
+           var tblText = '<table id="t01"><tr><th>ID</th> <th>Name</th> <th>Number</th> <th>Date</th></tr>';
+           var len = results.rows.length;
+
+           for (var i = 0; i < len; i++) {
+              var tmpArgs = results.rows.item(i).id + ",'" + results.rows.item(i).name + "','" + results.rows.item(i).number + "','" + results.rows.item(i).date + "'" ;
+              tblText += '<tr onclick="goPopup('+ tmpArgs + ');"><td>' + results.rows.item(i).id +'</td><td>' + results.rows.item(i).name +'</td><td>' + results.rows.item(i).number + '</td><td>' + results.rows.item(i).date + '</td></tr>';
+           }
+           tblText += "</table>";
+           document.getElementById("tblDiv").innerHTML = tblText;
+        }
+
+        //Delete query
+        function deleteRow(tx) {
+           tx.executeSql('DELETE FROM DEMO WHERE id = ' + currentRow, [], queryDB, errorCB);
+        }
+
+        // Transaction error callback
+        //
+        function errorCB(err) {
+           alert("Error processing SQL: " + err.code);
+        }
+
+        // Transaction success callback
+        //
+        function successCB() {
+          var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+          db.transaction(queryDB, errorCB);
+        }
+
+        //Insert query
+        //
+        function insertDB(tx) {
+           //get actual date
+           var today = new Date();
+           var dd = today.getDate();
+           var mm = today.getMonth() + 1;
+           var yyyy = today.getFullYear();
+           if(dd < 10) {
+              dd = '0' + dd;
+           }
+           if(mm < 10) {
+              mm = '0'+ mm;
+           }
+           today = dd +'-' + mm + '-' + yyyy;
+
+           switch (value) {
+            case 0:
+            var inputs = document.getElementById('data-input').getElementsByTagName('input');
+            var thesql = 'INSERT INTO DEMO ' + '(' + 'name,' + 'number,' + 'number2,' + 'number3,' + 'number4' + ') VALUES ("';
+            for (var i = 0; i < inputs.length; i++) {
+                if(i === (inputs.length - 1) ) {
+                    thesql = thesql + inputs[i].value + '")';
+                } else {
+                    thesql = thesql + inputs[i].value + '","';
                 }
-                tblText +="</table>";
-                document.getElementById("tblDiv").innerHTML =tblText;
+                
             }
+            //thesql += ')'
+            tx.executeSql(thesql);
 
-            //Delete query
-            function deleteRow(tx) {
-                tx.executeSql('DELETE FROM DEMO WHERE id = ' + currentRow, [], queryDB, errorCB);
-            }
 
-            // Transaction error callback
-            //
-            function errorCB(err) {
-                alert("Error processing SQL: "+err.code);
-            }
 
-            // Transaction success callback
-            //
-            function successCB() {
-              var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-              db.transaction(queryDB, errorCB);
-            }
+                // var insert_in_db = ['name','number','number2','number3','number4','date'];
+                // var inputs = document.getElementById('data-input').getElementsByTagName('input');
+                // var tmp = "INSERT INTO DEMO ('')";
+                // for (var i = 0; i < insert_in_db.length; ++i) {
+                    
+                //     //tmp += insert_in_db[i] + ",";
+                // }
+                // //tx.executeSql(tmp);
+                //tx.executeSql('INSERT INTO DEMO (name,number,date) VALUES ("' + document.getElementById("txtName").value + '","' + document.getElementById("txtNumber").value + '","' + today + '")');
+                // document.getElementById("txtNumber").value = '';
+                value = -1;
+            break;
+            case 1:
+                response = fetchData();
+                //string on response should be like this
+                //#test-12345?
+                //get test
+                var name = response.substring( (response.indexOf('#') + 1), (response.indexOf('-')) );
+                document.getElementById("txtName").value = name;
+                //get 12345
+                var number = response.substring( (response.indexOf('-') + 1), (response.indexOf('?')) );
+                document.getElementById("txtNumber").value = number;
 
-            //  // Cordova is ready
-            // //
-            // function onDeviceReady() {
-            //   var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-            //   db.transaction(populateDB, errorCB, successCB);
-            // }
-
-            //Insert query
-            //
-            function insertDB(tx) {
-                //get actual date
-                var today = new Date();
-                var dd = today.getDate();
-                var mm = today.getMonth() + 1;
-                var yyyy = today.getFullYear();
-                if(dd < 10) {
-                    dd = '0' + dd;
-                }
-                if(mm < 10) {
-                    mm = '0'+ mm;
-                }
-                today = dd +'/' + mm + '/' + yyyy;
-                //var actual_date = new Date;
-              // tx.executeSql('INSERT INTO DEMO (name,number,date) VALUES ("' + document.getElementById("txtName").value + '","' + document.getElementById("txtNumber").value + '")');
+                //inserts name and number in local db
                 tx.executeSql('INSERT INTO DEMO (name,number,date) VALUES ("' + document.getElementById("txtName").value + '","' + document.getElementById("txtNumber").value + '","' + today + '")');
-            }
+                // clean text data entry fields
+                document.getElementById("txtName").value = '';
+                document.getElementById("txtNumber").value = '';
+                value = -1;
+            break;
+           }
+        }
 
-            function goInsert() {
-              //onDeviceReady();
-              var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-              db.transaction(insertDB, errorCB, successCB);
-            }
+        function goInsert(task) {
+        // for switch case:
+        // 0 means insert value from insert button (code remains the same until now)
+        // 1 means insert value from remote db
+          switch (task) {
+            case 0:
+                //onDeviceReady();
+                var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+                value = task;
+                db.transaction(insertDB, errorCB, successCB);
+                break;
+            case 1:
+                console.log("Value of 1");
+                var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+                value = task;
+                db.transaction(insertDB, errorCB, successCB);
+                break;
+          }
+        }
 
-            function goSearch() {
-              var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-              db.transaction(searchQueryDB, errorCB);
-            }
+        function goSearch() {
+          var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+          db.transaction(searchQueryDB, errorCB);
+        }
 
-            function goDelete() {
-               var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-               db.transaction(deleteRow, errorCB);
-               document.getElementById('qrpopup').style.display='none';
-            }
+        function goDelete() {
+          var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+          db.transaction(deleteRow, errorCB);
+          document.getElementById('qrpopup').style.display='none';
+        }
 
-            //Show the popup after tapping a row in table
-            //
-            function goPopup(row,rowname,rownum) {
-              currentRow=row;
-              document.getElementById("qrpopup").style.display="block";
-              document.getElementById("editNameBox").value = rowname;
-              document.getElementById("editNumberBox").value = rownum;
-            }
+        //Show the popup after tapping a row in table
+        //
+        function goPopup(row,rowname,rownum) {
+          currentRow=row;
+          document.getElementById("qrpopup").style.display="block";
+          document.getElementById("editNameBox").value = rowname;
+          document.getElementById("editNumberBox").value = rownum;
+        }
 
-            function editRow(tx) {
-              tx.executeSql('UPDATE DEMO SET name ="'+document.getElementById("editNameBox").value+
-              '", number= "'+document.getElementById("editNumberBox").value+ '" WHERE id = '
-              + currentRow, [], queryDB, errorCB);
+        function editRow(tx) {
+          tx.executeSql('UPDATE DEMO SET name ="'+document.getElementById("editNameBox").value+
+          '", number= "'+document.getElementById("editNumberBox").value+ '" WHERE id = '
+          + currentRow, [], queryDB, errorCB);
+        }
+        function goEdit() {
+          var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+          db.transaction(editRow, errorCB);
+          document.getElementById('qrpopup').style.display='none';
+        }
+
+        ///////////////////Fetch data from server///////////////////
+
+        function fetchData() {
+            var url = "http://phpcourse-2.000webhostapp.com/test.php"
+            var request = new XMLHttpRequest();
+            request.open("GET",url,false);
+            request.send();
+            if ((request.readyState === 4) && (request.status === 200)) {
+              alert("Connected to Internet");
+              return request.response;
             }
-            function goEdit() {
-              var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-              db.transaction(editRow, errorCB);
-              document.getElementById('qrpopup').style.display='none';
+       }
+
+        /////////////////Calendar//////////////////////////////////////////////////////////
+
+        // Project: Dynamic Date Selector (DtTvB) - 2006-03-16
+        // Script featured on JavaScript Kit- http://www.javascriptkit.com
+        // Code begin...
+        // Set the initial date.
+        var ds_i_date = new Date();
+        ds_c_month = ds_i_date.getMonth() + 1;
+        ds_c_year = ds_i_date.getFullYear();
+
+        // Get Element By Id
+        function ds_getel(id) {
+            return document.getElementById(id);
+        }
+
+        // Get the left and the top of the element.
+        function ds_getleft(el) {
+            var tmp = el.offsetLeft;
+            el = el.offsetParent
+            while(el) {
+                tmp += el.offsetLeft;
+                el = el.offsetParent;
             }
+            return tmp;
+        }
+        function ds_gettop(el) {
+            var tmp = el.offsetTop;
+            el = el.offsetParent
+            while(el) {
+                tmp += el.offsetTop;
+                el = el.offsetParent;
+            }
+            return tmp;
+        }
+
+        // Output Element
+        var ds_oe = ds_getel('ds_calclass');
+        // Container
+        var ds_ce = ds_getel('ds_conclass');
+
+        // Output Buffering
+        var ds_ob = ''; 
+        function ds_ob_clean() {
+            ds_ob = '';
+        }
+        function ds_ob_flush() {
+            ds_oe.innerHTML = ds_ob;
+            ds_ob_clean();
+        }
+        function ds_echo(t) {
+            ds_ob += t;
+        }
+
+        var ds_element; // Text Element...
+
+        var ds_monthnames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+        ]; // You can translate it for your language.
+
+        var ds_daynames = [
+        'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+        ]; // You can translate it for your language.
+
+        // Calendar template
+        function ds_template_main_above(t) {
+            return '<table cellpadding="3" cellspacing="1" class="ds_tbl">'
+                 + '<tr>'
+                 + '<td class="ds_head" style="cursor: pointer" onclick="ds_py();"><<</td>'
+                 + '<td class="ds_head" style="cursor: pointer" onclick="ds_pm();"><</td>'
+                 + '<td class="ds_head" style="cursor: pointer" onclick="ds_hi();" colspan="3">[Close]</td>'
+                 + '<td class="ds_head" style="cursor: pointer" onclick="ds_nm();">></td>'
+                 + '<td class="ds_head" style="cursor: pointer" onclick="ds_ny();">>></td>'
+                 + '</tr>'
+                 + '<tr>'
+                 + '<td colspan="7" class="ds_head">' + t + '</td>'
+                 + '</tr>'
+                 + '<tr>';
+        }
+
+        function ds_template_day_row(t) {
+            return '<td class="ds_subhead">' + t + '</td>';
+            // Define width in CSS, XHTML 1.0 Strict doesn't have width property for it.
+        }
+
+        function ds_template_new_week() {
+            return '</tr><tr>';
+        }
+
+        function ds_template_blank_cell(colspan) {
+            return '<td colspan="' + colspan + '"></td>'
+        }
+
+        function ds_template_day(d, m, y) {
+            return '<td class="ds_cell" onclick="ds_onclick(' + d + ',' + m + ',' + y + ')">' + d + '</td>';
+            // Define width the day row.
+        }
+
+        function ds_template_main_below() {
+            return '</tr>'
+                 + '</table>';
+        }
+
+        // This one draws calendar...
+        function ds_draw_calendar(m, y) {
+            // First clean the output buffer.
+            ds_ob_clean();
+            // Here we go, do the header
+            ds_echo (ds_template_main_above(ds_monthnames[m - 1] + ' ' + y));
+            for (i = 0; i < 7; i ++) {
+                ds_echo (ds_template_day_row(ds_daynames[i]));
+            }
+            // Make a date object.
+            var ds_dc_date = new Date();
+            ds_dc_date.setMonth(m - 1);
+            ds_dc_date.setFullYear(y);
+            ds_dc_date.setDate(1);
+            if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) {
+                days = 31;
+            } else if (m == 4 || m == 6 || m == 9 || m == 11) {
+                days = 30;
+            } else {
+                days = (y % 4 == 0) ? 29 : 28;
+            }
+            var first_day = ds_dc_date.getDay();
+            var first_loop = 1;
+            // Start the first week
+            ds_echo (ds_template_new_week());
+            // If sunday is not the first day of the month, make a blank cell...
+            if (first_day != 0) {
+                ds_echo (ds_template_blank_cell(first_day));
+            }
+            var j = first_day;
+            for (i = 0; i < days; i ++) {
+                // Today is sunday, make a new week.
+                // If this sunday is the first day of the month,
+                // we've made a new row for you already.
+                if (j == 0 && !first_loop) {
+                    // New week!!
+                    ds_echo (ds_template_new_week());
+                }
+                // Make a row of that day!
+                ds_echo (ds_template_day(i + 1, m, y));
+                // This is not first loop anymore...
+                first_loop = 0;
+                // What is the next day?
+                j ++;
+                j %= 7;
+            }
+            // Do the footer
+            ds_echo (ds_template_main_below());
+            // And let's display..
+            ds_ob_flush();
+            // Scroll it into view.
+            ds_ce.scrollIntoView();
+        }
+
+        // A function to show the calendar.
+        // When user click on the date, it will set the content of t.
+        function ds_sh(t) {
+            // Set the element to set...
+            ds_element = t;
+            // Make a new date, and set the current month and year.
+            var ds_sh_date = new Date();
+            ds_c_month = ds_sh_date.getMonth() + 1;
+            ds_c_year = ds_sh_date.getFullYear();
+            // Draw the calendar
+            ds_draw_calendar(ds_c_month, ds_c_year);
+            // To change the position properly, we must show it first.
+            ds_ce.style.display = '';
+            // Move the calendar container!
+            the_left = ds_getleft(t);
+            the_top = ds_gettop(t) + t.offsetHeight;
+            ds_ce.style.left = the_left + 'px';
+            ds_ce.style.top = the_top + 'px';
+            // Scroll it into view.
+            ds_ce.scrollIntoView();
+        }
+
+        // Hide the calendar.
+        function ds_hi() {
+            ds_ce.style.display = 'none';
+        }
+
+        // Moves to the next month...
+        function ds_nm() {
+            // Increase the current month.
+            ds_c_month ++;
+            // We have passed December, let's go to the next year.
+            // Increase the current year, and set the current month to January.
+            if (ds_c_month > 12) {
+                ds_c_month = 1; 
+                ds_c_year++;
+            }
+            // Redraw the calendar.
+            ds_draw_calendar(ds_c_month, ds_c_year);
+        }
+
+        // Moves to the previous month...
+        function ds_pm() {
+            ds_c_month = ds_c_month - 1; // Can't use dash-dash here, it will make the page invalid.
+            // We have passed January, let's go back to the previous year.
+            // Decrease the current year, and set the current month to December.
+            if (ds_c_month < 1) {
+                ds_c_month = 12; 
+                ds_c_year = ds_c_year - 1; // Can't use dash-dash here, it will make the page invalid.
+            }
+            // Redraw the calendar.
+            ds_draw_calendar(ds_c_month, ds_c_year);
+        }
+
+        // Moves to the next year...
+        function ds_ny() {
+            // Increase the current year.
+            ds_c_year++;
+            // Redraw the calendar.
+            ds_draw_calendar(ds_c_month, ds_c_year);
+        }
+
+        // Moves to the previous year...
+        function ds_py() {
+            // Decrease the current year.
+            ds_c_year = ds_c_year - 1; // Can't use dash-dash here, it will make the page invalid.
+            // Redraw the calendar.
+            ds_draw_calendar(ds_c_month, ds_c_year);
+        }
+
+        // Format the date to output.
+        function ds_format_date(d, m, y) {
+            // 2 digits month.
+            m2 = '00' + m;
+            m2 = m2.substr(m2.length - 2);
+            // 2 digits day.
+            d2 = '00' + d;
+            d2 = d2.substr(d2.length - 2);
+            // YYYY-MM-DD
+            //return y + '-' + m2 + '-' + d2;
+            // DD-MM-YYYYY
+            //return d2 + '-' + m2 + '-' + y;
+            return d2 + '-' + m2 + '-' + y;
+        }
+
+        // When the user clicks the day.
+        function ds_onclick(d, m, y) {
+            // Hide the calendar.
+            ds_hi();
+            // Set the value of it, if we can.
+            if (typeof(ds_element.value) != 'undefined') {
+                ds_element.value = ds_format_date(d, m, y);
+            // Maybe we want to set the HTML in it.
+            } else if (typeof(ds_element.innerHTML) != 'undefined') {
+                ds_element.innerHTML = ds_format_date(d, m, y);
+            // I don't know how should we display it, just alert it to user.
+            } else {
+                alert (ds_format_date(d, m, y));
+            }
+        }
     </script>
   </body>
 
