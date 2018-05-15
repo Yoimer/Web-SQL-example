@@ -45,19 +45,24 @@
     <div id="data-input">
         <dl>
             <dt>Name</dt>
-                <dd><input type="text" value="" id="txtName"></dd>
-                <br/><br/>
+            <!-- <dd><input type="text" value="" id="txtName"></dd> -->
+            <dd><input type="text" value="" id="name"></dd>
+            <br/><br/>
             <dt>Number</dt>
-                <dd><input type="text" value="" id="txtNumber"></dd>
-                <br/><br/>
+            <!-- <dd><input type="text" value="" id="txtNumber"></dd> -->
+            <dd><input type="text" value="" id="number"></dd>
+            <br/><br/>
             <dt>Number2</dt>
-                <dd><input type="text" value="" id="txtNumber1"></dd>
+            <!-- <dd><input type="text" value="" id="txtNumber1"></dd> -->
+            <dd><input type="text" value="" id="number2"></dd>
             <br/><br/>
             <dt>Number3</dt>
-                <dd><input type="text" value="" id="txtNumber2"></dd>
+            <!-- <dd><input type="text" value="" id="txtNumber2"></dd> -->
+            <dd><input type="text" value="" id="number3"></dd>
             <br/><br/>
             <dt>Number4</dt>
-                <dd><input type="text" value="" id="txtNumber3"></dd>
+            <!-- <dd><input type="text" value="" id="txtNumber3"></dd> -->
+            <dd><input type="text" value="" id="number4"></dd>
         </dl>
     </div>
 
@@ -169,31 +174,41 @@
            switch (value) {
             case 0:
             var inputs = document.getElementById('data-input').getElementsByTagName('input');
-            var thesql = 'INSERT INTO DEMO ' + '(' + 'name,' + 'number,' + 'number2,' + 'number3,' + 'number4' + ') VALUES ("';
+            // var thesql = 'INSERT INTO DEMO ' + '(' + 'name,' + 'number,' + 'number2,' + 'number3,' + 'number4' + ') VALUES ("';
+            // for (var i = 0; i < inputs.length; i++) {
+            //     if(i === (inputs.length - 1) ) {
+            //         thesql = thesql + inputs[i].value + '")';
+            //     } else {
+            //         thesql = thesql + inputs[i].value + '","';
+            //     }
+                
+            // }
+            // //thesql += ')'
+            // tx.executeSql(thesql);
+
+            // build insert
+            var tempString = 'INSERT INTO DEMO ' + '(';
+            for (var i = 0; i < inputs.length; i++) {
+                if (i === (inputs.length - 1) ) {
+                    tempString += inputs[i].id + ')';
+                } else {
+                    tempString += inputs[i].id + ',';
+                }
+            }
+
+            //build values
+            tempString += ' VALUES ("';
             for (var i = 0; i < inputs.length; i++) {
                 if(i === (inputs.length - 1) ) {
-                    thesql = thesql + inputs[i].value + '")';
+                    tempString += inputs[i].value + '")';
                 } else {
-                    thesql = thesql + inputs[i].value + '","';
+                    tempString += inputs[i].value + '","';
                 }
-                
             }
-            //thesql += ')'
-            tx.executeSql(thesql);
 
+            tx.executeSql(tempString);
 
-
-                // var insert_in_db = ['name','number','number2','number3','number4','date'];
-                // var inputs = document.getElementById('data-input').getElementsByTagName('input');
-                // var tmp = "INSERT INTO DEMO ('')";
-                // for (var i = 0; i < insert_in_db.length; ++i) {
-                    
-                //     //tmp += insert_in_db[i] + ",";
-                // }
-                // //tx.executeSql(tmp);
-                //tx.executeSql('INSERT INTO DEMO (name,number,date) VALUES ("' + document.getElementById("txtName").value + '","' + document.getElementById("txtNumber").value + '","' + today + '")');
-                // document.getElementById("txtNumber").value = '';
-                value = -1;
+            value = -1;
             break;
             case 1:
                 response = fetchData();
