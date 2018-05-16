@@ -276,7 +276,8 @@
             tempString += ' VALUES ("';
             for (var i = 0; i < inputs.length; i++) {
                 if(i === (inputs.length - 1) ) {
-                    tempString += inputs[i].value + '","' + today + '")';
+                    //tempString += inputs[i].value + '","' + today + '")';
+                    tempString += inputs[i].value + '","' + date_from_calendar + '")';
                 } else {
                     tempString += inputs[i].value + '","';
                 }
