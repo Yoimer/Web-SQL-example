@@ -96,11 +96,13 @@
 
         function onDeviceReady() {
             var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-                db.transaction(populateDB, errorCB, successCB);
+                // don't call successCB,just insert
+                //db.transaction(populateDB, errorCB, successCB);
+                db.transaction(populateDB, errorCB);
             }
 
-            //reads data base when starts index.html
-            onDeviceReady();
+        //reads data base when starts index.html
+        onDeviceReady();
         var currentRow;
         var value = -1;
         var response = '';
@@ -108,7 +110,18 @@
         // Populate the phone_gap
         //
         function populateDB(tx) {
-           tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT, name,number,number2,number3,number4,date)');
+           //var tempString = 'INSERT INTO DEMO ' + '(';
+           var tempString = 'CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT,';
+           var inputs = document.getElementById('data-input').getElementsByTagName('input');
+           for (var i = 0; i < inputs.length; i++) {
+                if (i === (inputs.length - 1) ) {
+                    tempString += inputs[i].id + ',' + 'date' + ')';
+                } else {
+                    tempString += inputs[i].id + ',';
+                }
+            }
+            //tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT, name,number,number2,number3,number4,date)');
+            tx.executeSql(tempString);
         }
 
         // Query the phone_gap
