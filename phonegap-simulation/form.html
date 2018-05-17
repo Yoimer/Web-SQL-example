@@ -1,42 +1,51 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <form action="/action_page.php" id="usrform">
-            Name </br>
-            <input type="text" name="usrname">
-            </br></br>
-            Name </br>
-            <input type="text" name="usrname">
-            </br></br>
-            Name </br>
-            <input type="text" name="usrname">
-            </br></br>
-            <textarea rows="4" cols="50" name="comment" form="usrform">
-            Enter text here...
-            </textarea>
-            </br></br>
-            <textarea rows="4" cols="50" name="comment" form="usrform">
-            Enter text here...
-            </textarea>
-            </br></br>
-            <textarea rows="4" cols="50" name="comment" form="usrform">
-            Enter text here...
-            </textarea>
-            </br></br>
-            <textarea rows="4" cols="50" name="comment" form="usrform">
-            Enter text here...
-            </textarea>
-            </br></br>
-            <textarea rows="4" cols="50" name="comment" form="usrform">
-            Enter text here...
-            </textarea>
-             </br></br>
-            <input type="submit">
-        </form>
-        <!-- <br>
-        <textarea rows="4" cols="50" name="comment" form="usrform">
-        Enter text here...</textarea>
-        <p>The text area above is outside the form element, but should still be a part of the form.</p>
-        <p><b>Note:</b> The form attribute is not supported in IE.</p> -->
+        <div id="input_form">
+            <form action="" id="usrform">
+                Name </br>
+                <input type="text" name="name">
+                </br></br>
+                Name2 </br>
+                <input type="text" name="name2">
+                </br></br>
+                Name3 </br>
+                <input type="text" name="name3">
+                </br></br>
+                <textarea rows="4" cols="50" name="comment1" form="usrform"></textarea>
+                </br></br>
+                <textarea rows="4" cols="50" name="comment2" form="usrform"></textarea>
+                </br></br>
+                <textarea rows="4" cols="50" name="comment3" form="usrform"></textarea>
+                </br></br>
+                <textarea rows="4" cols="50" name="comment4" form="usrform"></textarea>
+                </br></br>
+                <textarea rows="4" cols="50" name="comment5" form="usrform"></textarea>
+                </br></br>
+                <button onclick="process_form()">Insert</button>
+            </form>
+        </div>
+        <script type="text/javascript">
+
+            function process_form() {
+                var inputs_values = new Array();
+                //var inputs  =  document.getElementById('input_form').getElementsByTagName('input');
+                var textarea  =  document.getElementById('input_form').getElementsByTagName('textarea');
+
+                for(var i = 0; i < textarea.length; i++) {
+                    inputs_values.push(textarea[i].value);
+                }
+
+                text = document.getElementById('input_form').getElementsByTagName('input');
+
+                for(var i = 0; i < text.length; i++) {
+                    inputs_values.push(text[i].value);
+                }
+            }
+
+        </script>
     </body>
 </html>
+
+<!-- <b>Insert any date here</b><input id="date_from_calendar" onclick="ds_sh(this);" name="date" readonly="readonly" style="cursor: text" /><br /><br />
+ -->
