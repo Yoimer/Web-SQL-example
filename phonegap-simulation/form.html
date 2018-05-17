@@ -4,30 +4,30 @@
         <div id="input_form">
             <form action="" id="usrform">
                 Name </br>
-                <input type="text" name="name">
+                <input type="text" id="name">
                 </br></br>
                 Name2 </br>
-                <input type="text" name="name2">
+                <input type="text" id="name2">
                 </br></br>
                 Name3 </br>
-                <input type="text" name="name3">
+                <input type="text" id="name3">
                 </br></br>
-                <textarea rows="4" cols="50" name="comment1" form="usrform"></textarea>
+                <textarea rows="4" cols="50" id="comment1" form="usrform"></textarea>
                 </br></br>
-                <textarea rows="4" cols="50" name="comment2" form="usrform"></textarea>
+                <textarea rows="4" cols="50" id="comment2" form="usrform"></textarea>
                 </br></br>
-                <textarea rows="4" cols="50" name="comment3" form="usrform"></textarea>
+                <textarea rows="4" cols="50" id="comment3" form="usrform"></textarea>
                 </br></br>
-                <textarea rows="4" cols="50" name="comment4" form="usrform"></textarea>
+                <textarea rows="4" cols="50" id="comment4" form="usrform"></textarea>
                 </br></br>
-                <textarea rows="4" cols="50" name="comment5" form="usrform"></textarea>
+                <textarea rows="4" cols="50" id="comment5" form="usrform"></textarea>
                 </br></br>
                 <button onclick="process_form()">Insert</button>
             </form>
         </div>
         <script type="text/javascript">
 
-            function process_form() {
+            /*function process_form() {
                 var inputs_values = new Array();
                 //var inputs  =  document.getElementById('input_form').getElementsByTagName('input');
                 var textarea  =  document.getElementById('input_form').getElementsByTagName('textarea');
@@ -40,6 +40,25 @@
 
                 for(var i = 0; i < text.length; i++) {
                     inputs_values.push(text[i].value);
+                }
+            }*/
+
+            // function myFunction() {
+            //     var elements = document.getElementById("myForm").elements;
+            //     var obj ={};
+            //     for(var i = 0 ; i < elements.length ; i++){
+            //         var item = elements.item(i);
+            //         obj[item.name] = item.value;
+            //     }
+
+            //     document.getElementById("demo").innerHTML = JSON.stringify(obj);
+            // }
+
+            function process_form() {
+                var elements = document.getElementById('usrform').elements;
+                for (var i = 0; i < elements.length; i++) {
+                    console.log(elements[i].id);
+                    console.log(elements[i].value)
                 }
             }
 
