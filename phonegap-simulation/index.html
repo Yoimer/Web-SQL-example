@@ -43,105 +43,17 @@
 
     <!-- Data entry -->
     <div id="data-input">
-<!--         <dl>
-            <dt>Additional ope com</dt>
-            <dd><input type="text" value="" id="additional_ope"></dd>
-            <br/><br/>
-            <dt>Process Safety Rem</dt>
-            <dd><input type="text" value="" id="process_saf"></dd>
-            <br/><br/>
-            <dt>REMARKS for Next OP</dt>
-            <dd><input type="text" value="" id="remarks_for"></dd>
-            <br/><br/>
-            <dt>HSE SUMMARY</dt>
-            <dd><input type="text" value="" id="hse_summary"></dd>
-            <br/><br/>
-            <hr/>
-            <dt>H 00:00</dt>
-            <dd><input type="text" value="" id="h_00"></dd>
-            <br/><br/>
-            <dt>H 01:00</dt>
-            <dd><input type="text" value="" id="h_01"></dd>
-            <br/><br/>
-            <dt>H 02:00</dt>
-            <dd><input type="text" value="" id="h_02"></dd>
-            <br/><br/>
-            <dt>H 03:00</dt>
-            <dd><input type="text" value="" id="h_03"></dd>
-            <br/><br/>
-            <dt>H 04:00</dt>
-            <dd><input type="text" value="" id="h_04"></dd>
-            <br/><br/>
-            <dt>H 05:00</dt>
-            <dd><input type="text" value="" id="h_05"></dd>
-            <br/><br/>
-            <dt>H 06:00</dt>
-            <dd><input type="text" value="" id="h_06"></dd>
-            <br/><br/>
-            <dt>H 07:00</dt>
-            <dd><input type="text" value="" id="h_07"></dd>
-            <br/><br/>
-            <dt>H 08:00</dt>
-            <dd><input type="text" value="" id="h_08"></dd>
-            <br/><br/>
-            <dt>H 09:00</dt>
-            <dd><input type="text" value="" id="h_09"></dd>
-            <br/><br/>
-            <dt>H 10:00</dt>
-            <dd><input type="text" value="" id="h_10"></dd>
-            <br/><br/>
-            <dt>H 11:00</dt>
-            <dd><input type="text" value="" id="h_11"></dd>
-            <br/><br/>
-            <dt>H 12:00</dt>
-            <dd><input type="text" value="" id="h_12"></dd>
-            <br/><br/>
-            <dt>H 13:00</dt>
-            <dd><input type="text" value="" id="h_13"></dd>
-            <br/><br/>
-            <dt>H 14:00</dt>
-            <dd><input type="text" value="" id="h_14"></dd>
-            <br/><br/>
-            <dt>H 15:00</dt>
-            <dd><input type="text" value="" id="h_15"></dd>
-            <br/><br/>
-            <dt>H 16:00</dt>
-            <dd><input type="text" value="" id="h_16"></dd>
-            <br/><br/>
-            <dt>H 17:00</dt>
-            <dd><input type="text" value="" id="h_17"></dd>
-            <br/><br/>
-            <dt>H 18:00</dt>
-            <dd><input type="text" value="" id="h_18"></dd>
-            <br/><br/>
-            <dt>H 19:00</dt>
-            <dd><input type="text" value="" id="h_19"></dd>
-            <br/><br/>
-            <dt>H 20:00</dt>
-            <dd><input type="text" value="" id="h_20"></dd>
-            <br/><br/>
-            <dt>H 21:00</dt>
-            <dd><input type="text" value="" id="h_21"></dd>
-            <br/><br/>
-            <dt>H 22:00</dt>
-            <dd><input type="text" value="" id="h_22"></dd>
-            <br/><br/>
-            <dt>H 23:00</dt>
-            <dd><input type="text" value="" id="h_23"></dd>
-        </dl> -->
-
-            <!-- <form action="" method="post" id="usrform"> -->
                 Additional ope com </br>
-                <input type="text" id="additional_ope">
+                <textarea rows="4" cols="50" id="additional_ope" form="usrform"></textarea>
                 </br></br>
                 Process Safety Rem</br>
-                <input type="text" id="process_saf">
+                <textarea rows="4" cols="50" id="process_saf" form="usrform"></textarea>
                 </br></br>
                 REMARKS for Next OP</br>
-                <input type="text" id="remarks_for">
+                <textarea rows="4" cols="50" id="remarks_for" form="usrform"></textarea>
                 </br></br>
                 HSE SUMMARY</br>
-                <input type="text" id="hse_summary">
+                <textarea rows="4" cols="50" id="hse_summary" form="usrform"></textarea>
                 </br></br>
                 H 00:00</br>
                 <textarea rows="4" cols="50" id="h_00" form="usrform"></textarea>
@@ -264,7 +176,7 @@
         function populateDB(tx) {
            //var tempString = 'INSERT INTO DEMO ' + '(';
            var tempString = 'CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT,';
-           var inputs = document.getElementById('data-input').getElementsByTagName('input');
+           var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
 
            for (var i = 0; i < inputs.length; i++) {
                 if (i === (inputs.length - 1) ) {
@@ -348,7 +260,7 @@
 
            switch (value) {
             case 0:
-            var inputs = document.getElementById('data-input').getElementsByTagName('input');
+            var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
 
             // build insert
             var tempString = 'INSERT INTO DEMO ' + '(';
