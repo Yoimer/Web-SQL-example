@@ -41,8 +41,25 @@
             <button onclick="document.getElementById('qrpopup').style.display='none';">Discard</button>
     </div>
 
+    <!-- Calendar form section -->
+    <table class="ds_box" cellpadding="0" cellspacing="0" id="ds_conclass" style="display: none;">
+        <tr>
+            <td id="ds_calclass"></td>
+        </tr>
+    </table>
+    <div class="form-center">
+        <form id="calendar" name="myForm" action="" method="post">
+            <div>
+                  <hr/>
+                  <b>Insert any date here</b><input id="date_from_calendar" onclick="ds_sh(this);" name="date" readonly="readonly" style="cursor: text" /><br /><br />
+            </div>
+        </form>
+    </div>
+
     <!-- Data entry -->
     <div id="data-input">
+
+                </br></br></br></br></br></br></br></br></br></br></br></br>
                 Additional ope com </br>
                 <textarea rows="4" cols="50" id="additional_ope" form="usrform"></textarea>
                 </br></br>
@@ -143,25 +160,9 @@
         <!-- <button onclick="goInsert(1)">Fetch Data</button> -->
     </div>
 
-    <!-- Calendar form section -->
-    <table class="ds_box" cellpadding="0" cellspacing="0" id="ds_conclass" style="display: none;">
-        <tr>
-            <td id="ds_calclass"></td>
-        </tr>
-    </table>
-    <div class="form-center">
-        <form id="calendar" name="myForm" action="" method="post">
-            <div>
-                  <hr/>
-                  <b>Insert any date here</b><input id="date_from_calendar" onclick="ds_sh(this);" name="date" readonly="readonly" style="cursor: text" /><br /><br />
-            </div>
-        </form>
-    </div>
     <script type="text/javascript">
 
         function onDeviceReady() {
-            document.getElementById('data-input').style.display = 'none';
-            document.getElementById('calendar').style.display = 'none'
 
             var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
                 // don't call successCB,just insert
@@ -323,6 +324,9 @@
         // 1 means insert value from remote db
           switch (task) {
             case 0:
+                
+                document.getElementById('data-input').style.display = 'block';
+                document.querySelector('.form-center').style.display = 'block';
                 //onDeviceReady();
                 var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
                 value = task;
