@@ -146,13 +146,15 @@
                 </br></br>
                 <!-- goInsert(0)insert value in db from textarea-->
                 <button id="goInsertButton0" onclick="goInsert(0)">Insert</button>
-                <button id="goSearchButton0">Search</button>
+                <!-- goSearch(1) checks if there is data saved in db or not-->
+                <button id="goSearchButton1" onclick="goSearch(1)">Search</button>
                 
     </div>
 
     <!-- goInsert(2) shows textarea and calendar-->
     <button id="goInsertButton2" onclick="goInsert(2)">Insert</button>
-    <button id="goSearchButton2">Search</button>
+    <!-- goSearch(0) shows calendar-->
+    <button id="goSearchButton0" onclick="goSearch(0)">Search</button>
 
     <!-- Insert - Search - Show All buttons -->
     <div id="tblDiv"></div>
@@ -207,20 +209,30 @@
 
         function searchQueryDB(tx) {
 
-           tx.executeSql("SELECT * FROM DEMO where date like ('%" + document.forms["myForm"]["date"].value + "%')", [], querySuccess, errorCB);
+           // document.getElementById('goInsertButton2').style.display = 'none';
+           // document.querySelector('.form-center').style.display = 'block';
+           //tx.executeSql("SELECT * FROM DEMO where date like ('%" + document.forms["myForm"]["date"].value + "%')", [], querySuccess, errorCB);
+           tx.executeSql("SELECT * FROM DEMO where date = ('" + document.forms["myForm"]["date"].value + "')", [], querySuccess, errorCB);
            // cleans form data
            document.forms["myForm"]["date"].value = ' ';
         }
         // Query the success callback
-        //
-        function querySuccess(tx, results) {
-           var tblText = '<table id="t01"><tr><th>ID</th> <th>Name</th> <th>Number</th> <th>Date</th></tr>';
-           var len = results.rows.length;
 
-           for (var i = 0; i < len; i++) {
-              var tmpArgs = results.rows.item(i).id + ",'" + results.rows.item(i).name + "','" + results.rows.item(i).number + "','" + results.rows.item(i).date + "'" ;
-              tblText += '<tr onclick="goPopup('+ tmpArgs + ');"><td>' + results.rows.item(i).id +'</td><td>' + results.rows.item(i).name +'</td><td>' + results.rows.item(i).number + '</td><td>' + results.rows.item(i).date + '</td></tr>';
-           }
+        function querySuccess(tx, results) {
+          var tblText = '<table id="t01"><tr><th>ID</th> <th>Name</th> <th>Number</th> <th>Date</th></tr>';
+          var len = results.rows.length;
+
+          switch (len) {
+            // saves data in db from textarea
+            case 0:
+                console.log('zero');
+                break;
+            // shows data in textarea
+            case 1:
+                console.log('one');
+                break;
+          }
+
            tblText += "</table>";
            document.getElementById("tblDiv").innerHTML = tblText;
         }
@@ -333,15 +345,28 @@
                 document.getElementById('data-input').style.display = 'block';
                 document.querySelector('.form-center').style.display = 'block';
 
-                document.getElementById('goSearchButton2').style.display = 'none';
+                document.getElementById('goSearchButton0').style.display = 'none';
                 document.getElementById('goInsertButton2').style.display = 'none';
                 break;
           }
         }
 
-        function goSearch() {
-          var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-          db.transaction(searchQueryDB, errorCB);
+        function goSearch(task) {
+          switch (task) {
+            // shows calendar
+            case 0:                
+                document.querySelector('.form-center').style.display = 'block';
+                document.getElementById('goSearchButton1').style.display = 'block';
+
+                document.getElementById('goInsertButton2').style.display = 'none';
+                document.getElementById('goSearchButton0').style.display = 'none';
+                break;
+                // checks data existence in db
+            case 1:
+                var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+                db.transaction(searchQueryDB, errorCB);
+                break;
+          }
         }
 
         function goDelete() {
