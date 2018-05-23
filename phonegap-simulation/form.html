@@ -114,12 +114,27 @@
             <textarea rows="4" cols="50" id="h_23" form="usrform"></textarea>
             </br></br>
                 <!-- goInsert(0)insert value in db from textarea-->
-            <button id="goInsertButton0" onclick="goInsert(0)">Insert</button>
+            <button id="goInsertButton0" onclick="IsEmpty()">Insert</button>
             <!-- goSearch(1) checks if there is data saved in db or not-->
             <button id="goSearchButton1" onclick="goSearch(1)">Search</button>
+
+            <button onclick="goHome()">Home</button>
+
     </div>
 
         <script type="text/javascript">
+
+        function IsEmpty(){
+            if(document.forms["myForm"]["date"].value === "") {
+                alert("empty");
+                // do nothing
+              }
+            else {
+                goInsert(0);
+            }  
+                
+        }
+
 
         function goInsert(task) {
           switch (task) {
