@@ -287,6 +287,7 @@
                     tx.executeSql(tempString);
                     //cleans date from calendar
                     document.getElementById('date_from_calendar').value = "";
+                    alert("Data saved successfully");
                 }
 
             value = -1;
@@ -414,9 +415,11 @@
                 // 0 no in db, proceed to save
                 case 0:
                     // go insert zero
+                    goInsert(len);
                     break;
                 case 1:
                     alert("Date already saved");
+                    // retrieve textarea with values from db on all of them
             }
         }
 
