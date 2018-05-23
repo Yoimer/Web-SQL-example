@@ -149,10 +149,18 @@
         H 23:00</br>
         <textarea rows="4" cols="50" id="h_23" form="usrform"></textarea>
         </br></br>
-        <!-- goInsert(0)insert value in db from textarea-->
-        <button id="goInsertButton0" onclick="IsEmpty()">Insert</button>
-        <!-- goSearch(1) checks if there is data saved in db or not-->
-        <button id="goSearchButton1" onclick="goSearch(1)">Search</button>
+        <div class="insert-search-buttons-textarea">
+            <!-- goInsert(0)insert value in db from textarea-->
+            <button id="IsEmpty" onclick="IsEmpty()">Insert</button>
+            <!-- goSearch(1) checks if there is data saved in db or not-->
+            <button id="goSearch" onclick="goSearch(1)">Search</button>
+            <button onclick="goHome()">Home</button>
+        </div>
+    </div>
+
+    <div class="update_insert-search-buttons-textarea">
+        <button id="" onclick="">Insert</button>
+        <button id="" onclick="">Search</button>
         <button onclick="goHome()">Home</button>
     </div>
 
@@ -410,7 +418,7 @@
 
         function isAlreadyInDB(tx, results) {
             var len = results.rows.length;
-
+            var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
             switch(len) {
                 // 0 no in db, proceed to save
                 case 0:
@@ -418,8 +426,14 @@
                     goInsert(len);
                     break;
                 case 1:
+                    ////document.getElementById('IsEmpty').style.display = 'none';
+                    document.querySelector('.insert-search-buttons-textarea').style.display = 'none';
+                    document.querySelector('.update_insert-search-buttons-textarea').style.display = 'block';
                     alert("Date already saved");
                     // retrieve textarea with values from db on all of them
+                    for(var i = 0; i < inputs.length; ++i) {
+                        inputs[i].value = results.rows.item(0)[inputs[i].id];
+                    }
             }
         }
 
