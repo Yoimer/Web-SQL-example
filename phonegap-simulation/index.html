@@ -222,17 +222,6 @@
           var tblText = '<table id="t01"><tr><th>ID</th> <th>Name</th> <th>Number</th> <th>Date</th></tr>';
           var len = results.rows.length;
 
-          switch (len) {
-            // saves data in db from textarea
-            case 0:
-                console.log('zero');
-                break;
-            // shows data in textarea
-            case 1:
-                console.log('one');
-                break;
-          }
-
            tblText += "</table>";
            document.getElementById("tblDiv").innerHTML = tblText;
         }
@@ -256,8 +245,6 @@
         }
 
         //Insert query
-        //
-        //
         function insertDB(tx) {
            // get any date from calendar
            var date_from_calendar = document.getElementById('date_from_calendar').value;
@@ -410,6 +397,28 @@
             }
        }
 
+        /////////////////////////validate if date has been preveiously saved in db//////////////////////////
+        function checkDB() {
+            var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+            db.transaction(processQuery, errorCB);
+        }
+
+        function processQuery(tx) {
+            tx.executeSql("SELECT * FROM DEMO where date = ('" + document.forms["myForm"]["date"].value + "')", [], isAlreadyInDB, errorCB);
+        }
+
+        function isAlreadyInDB(tx, results) {
+            var len = results.rows.length;
+
+            switch(len) {
+                // 0 no in db, proceed to save
+                case 0:
+                    // go insert zero
+                    break;
+                case 1:
+                    alert("Date already saved");
+            }
+        }
 
         ///////////////////IsEmpty/////////////////////////////
         function IsEmpty(){
@@ -418,7 +427,8 @@
                 // do nothing
               }
             else {
-                goInsert(0);
+                //goInsert(0);
+                checkDB();
             }  
         }
 
