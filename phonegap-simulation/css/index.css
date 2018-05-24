@@ -146,3 +146,7 @@ dd {
 .search-home {
     display: none;
 }
+
+.modify-delete-home {
+    display: none;
+}

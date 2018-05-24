@@ -154,6 +154,13 @@
             <!-- <button id="goSearch1" onclick="goSearch(1)">Search</button> -->
             <button onclick="goHome()">Home</button>
         </div>
+
+        <div class="modify-delete-home">
+            <button id="" onclick="">Modify</button>
+            <button id="" onclick="">Delete</button>
+            <button id="" onclick="">Home</button>
+        </div>
+
     </div>
 
     <div class="update_insert-search-buttons-textarea">
@@ -520,6 +527,11 @@
                     break;
                 case 1:
                     // shows filled textarea readonly with buttons for modifying and deleting
+                    document.querySelector('.insert-search-buttons-textarea').style.display = 'none';
+                    document.querySelector('.update_insert-search-buttons-textarea').style.display = 'none';
+                    document.querySelector('.search-home').style.display = 'none';
+                    document.getElementById('data-input').style.display = 'block';
+                    document.querySelector('.modify-delete-home').style.display = 'block';
                     break;
             }
 
