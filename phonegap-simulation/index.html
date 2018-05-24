@@ -407,18 +407,20 @@
             for (var i = 0; i < inputs.length; i++) {
                 if (i === (inputs.length - 1) ) {
                     tempString += inputs[i].id + '=' + '"' + inputs[i].value + '"' + ' ';
-                    //clean values
-                    inputs[i].value = "";
                 } else {
                     tempString += inputs[i].id + '=' + '"' + inputs[i].value + '"' +  ',' + ' ';
-                    //clean values
-                    inputs[i].value = "";
                 }
             }
             tempString += 'WHERE ID=' + ID;
             tx.executeSql(tempString);
+
             //cleans date from calendar
             document.getElementById('date_from_calendar').value = "";
+            //clean values from all textareas
+            for(var i=0; i < inputs.length; i++) {
+                //clean values
+                inputs[i].value = "";
+            }
             alert("Data successfully updated");
         }
 
