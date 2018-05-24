@@ -59,7 +59,7 @@
         <!-- insert-search-button section -->
     <div id="insert-search-buttons">
         <button id="" onclick="goInsert(2)">Insert</button>
-        <button id="" onclick="goSearch(yyy)">Search</button>
+        <button id="" onclick="">Search</button>
     </div>
 
     <!-- Data entry -->
@@ -422,6 +422,9 @@
                 inputs[i].value = "";
             }
             alert("Data successfully updated");
+
+            document.querySelector('.update_insert-search-buttons-textarea').style.display = 'none';
+            document.querySelector('.insert-search-buttons-textarea').style.display = 'block';
         }
 
 
