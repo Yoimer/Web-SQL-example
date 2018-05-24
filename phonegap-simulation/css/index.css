@@ -141,3 +141,8 @@ dd {
 .update_insert-search-buttons-textarea {
     display: none;
 }
+
+/*update db */
+.search-home {
+    display: none;
+}

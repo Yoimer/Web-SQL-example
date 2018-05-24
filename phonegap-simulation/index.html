@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <h1>NextWells App Version 1.5</h1>
+    <h1>NextWells App Version 1.6</h1>
     <p>New Daily Operational Report</p>
 
     <!-- The hidden div tag for implementing the popup -->
@@ -59,7 +59,7 @@
         <!-- insert-search-button section -->
     <div id="insert-search-buttons">
         <button id="" onclick="goInsert(2)">Insert</button>
-        <button id="" onclick="">Search</button>
+        <button id="" onclick="goSearch(0)">Search</button>
     </div>
 
     <!-- Data entry -->
@@ -150,17 +150,20 @@
         <textarea rows="4" cols="50" id="h_23" form="usrform"></textarea>
         </br></br>
         <div class="insert-search-buttons-textarea">
-            <!-- goInsert(0)insert value in db from textarea-->
-            <button id="IsEmpty" onclick="IsEmpty()">Insert</button>
-            <!-- goSearch(1) checks if there is data saved in db or not-->
-            <button id="goSearch" onclick="goSearch(1)">Search</button>
+            <button id="IsEmpty" onclick="IsEmpty(0)">Insert</button>
+            <!-- <button id="goSearch1" onclick="goSearch(1)">Search</button> -->
             <button onclick="goHome()">Home</button>
         </div>
     </div>
 
     <div class="update_insert-search-buttons-textarea">
         <button id="" onclick="goUpdate()">Insert</button>
-        <button id="" onclick="">Search</button>
+        <!-- <button id="" onclick="">Search</button> -->
+        <button onclick="goHome()">Home</button>
+    </div>
+
+    <div class="search-home">
+        <button id="search" onclick="IsEmpty(1)">Search</button>
         <button onclick="goHome()">Home</button>
     </div>
 
@@ -353,12 +356,10 @@
         function goSearch(task) {
           switch (task) {
             // shows calendar
-            case 0:                
+            case 0:
+                document.getElementById('insert-search-buttons').style.display = 'none';
                 document.querySelector('.form-center').style.display = 'block';
-                document.getElementById('goSearchButton1').style.display = 'block';
-
-                document.getElementById('goInsertButton2').style.display = 'none';
-                document.getElementById('goSearchButton0').style.display = 'none';
+                document.querySelector('.search-home').style.display = 'block';
                 break;
                 // checks data existence in db
             case 1:
@@ -442,9 +443,16 @@
        }
 
         /////////////////////////validate if date has been preveiously saved in db//////////////////////////
-        function checkDB() {
+        function checkDB(task) {
             var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-            db.transaction(processQuery, errorCB);
+            switch(task) {
+                case 0:
+                    db.transaction(processQuery, errorCB);
+                    break;
+                case 1:
+                    db.transaction(searchDateInDb, errorCB);
+                    break;
+            }
         }
 
         function processQuery(tx) {
@@ -457,7 +465,7 @@
             //gets ID only when updating (len === 1)
             if(len === 1) {
                 ID = '';
-                ID = results.rows.item(i).id;
+                ID = results.rows.item(0).id;
             }
             var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
             switch(len) {
@@ -475,20 +483,48 @@
                     for(var i = 0; i < inputs.length; ++i) {
                         inputs[i].value = results.rows.item(0)[inputs[i].id];
                     }
+                    break;
             }
         }
 
         ///////////////////IsEmpty/////////////////////////////
-        function IsEmpty(){
+        function IsEmpty(task){
             if(document.forms["myForm"]["date"].value === "") {
                 alert("empty");
                 // do nothing
-              }
-            else {
-                //goInsert(0);
-                checkDB();
-            }  
+                return;
+            }
+            switch(task) {
+                case 0:
+                    //goInsert(0)
+                    checkDB(task);
+                    break;
+                case 1:
+                    //go search in db
+                    checkDB(task);
+                    break;
+            }
         }
+
+        ///////////////searchDateInDb////////////////////////////
+
+        function searchDateInDb(tx) {
+            tx.executeSql("SELECT * FROM DEMO where date = ('" + document.forms["myForm"]["date"].value + "')", [], checkDateInDb, errorCB);
+        }
+
+        function checkDateInDb(tx, results) {
+            var len = results.rows.length;
+            switch(len) {
+                case 0:
+                    alert("Date is not saved in db, please try another one")
+                    break;
+                case 1:
+                    // shows filled textarea readonly with buttons for modifying and deleting
+                    break;
+            }
+
+        }
+
 
         /////////////////Calendar//////////////////////////////////////////////////////////
 
