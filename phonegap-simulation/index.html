@@ -437,8 +437,12 @@
 
         function isAlreadyInDB(tx, results) {
             var len = results.rows.length;
-            ID = '';
-            ID = results.rows.item(i).id;
+
+            //gets ID only when updating (len === 1)
+            if(len === 1) {
+                ID = '';
+                ID = results.rows.item(i).id;
+            }
             var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
             switch(len) {
                 // 0 no in db, proceed to save
