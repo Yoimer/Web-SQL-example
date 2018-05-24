@@ -159,7 +159,7 @@
     </div>
 
     <div class="update_insert-search-buttons-textarea">
-        <button id="" onclick="">Insert</button>
+        <button id="" onclick="goUpdate()">Insert</button>
         <button id="" onclick="">Search</button>
         <button onclick="goHome()">Home</button>
     </div>
@@ -190,6 +190,7 @@
         var currentRow;
         var value = -1;
         var response = '';
+        var ID = '';
 
         // Populate the phone_gap
         //
@@ -383,15 +384,33 @@
         }
 
         function editRow(tx) {
-          tx.executeSql('UPDATE DEMO SET name ="'+document.getElementById("editNameBox").value+
-          '", number= "'+document.getElementById("editNumberBox").value+ '" WHERE id = '
-          + currentRow, [], queryDB, errorCB);
+          tx.executeSql('UPDATE DEMO SET name ="'+document.getElementById("editNameBox").value+'", number = "'+document.getElementById("editNumberBox").value+ '" WHERE id = ' + currentRow, [], queryDB, errorCB);
         }
         function goEdit() {
           var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
           db.transaction(editRow, errorCB);
           document.getElementById('qrpopup').style.display='none';
         }
+
+
+        ///////////////////////update///////////////////////
+        function goUpdate() {
+            var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+            db.transaction(update, errorCB);
+        }
+
+        function update(tx) {
+            var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
+
+            var tempString = 'UPDATE DEMO SET ';
+
+            for (var i = 0; i < 1; i++) {
+                tempString += inputs[i].id + '=' + '"' +inputs[i].value + '"' + ' ' + 'WHERE ID=' + ID;
+                //tx.executeSql('UPDATE DEMO SET name ="'+document.getElementById("editNameBox").value+'", number = "'+document.getElementById("editNumberBox").value+ '" WHERE id = ' + currentRow, [], queryDB, errorCB)
+                tx.executeSql(tempString);
+            }
+        }
+
 
         ///////////////////Fetch data from server///////////////////
 
@@ -418,6 +437,8 @@
 
         function isAlreadyInDB(tx, results) {
             var len = results.rows.length;
+            ID = '';
+            ID = results.rows.item(i).id;
             var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
             switch(len) {
                 // 0 no in db, proceed to save
