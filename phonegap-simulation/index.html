@@ -156,9 +156,10 @@
         </div>
 
         <div class="modify-delete-home">
-            <button id="" onclick="">Modify</button>
+            <button id="" onclick="goModify()">Modify</button>
             <button id="" onclick="">Delete</button>
             <button id="" onclick="">Home</button>
+            <button id="" onclick="goUpdate()">Update</button>
         </div>
 
     </div>
@@ -521,6 +522,11 @@
 
         function checkDateInDb(tx, results) {
             var len = results.rows.length;
+            //gets ID only when updating (len === 1)
+            if(len === 1) {
+                ID = '';
+                ID = results.rows.item(0).id;
+            }
             switch(len) {
                 case 0:
                     alert("Date is not saved in db, please try another one")
@@ -530,14 +536,25 @@
                     document.querySelector('.insert-search-buttons-textarea').style.display = 'none';
                     document.querySelector('.update_insert-search-buttons-textarea').style.display = 'none';
                     document.querySelector('.search-home').style.display = 'none';
+                    document.querySelector('.modify-delete-home').style.display = 'block'; 
                     document.getElementById('data-input').style.display = 'block';
-                    document.querySelector('.modify-delete-home').style.display = 'block';
+                    var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
+                    for (var i = 0; i < inputs.length; ++i) {
+                        inputs[i].value = results.rows.item(0)[inputs[i].id];
+                        inputs[i].setAttribute("readonly", true);
+                    }
                     break;
             }
 
         }
 
-
+        ///////////////////////////////modify/////////////////////////////////////////////////////
+        function goModify() {
+            var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
+            for (var i = 0; i < inputs.length; ++i) {
+                inputs[i].removeAttribute("readonly");
+            }
+        }
         /////////////////Calendar//////////////////////////////////////////////////////////
 
         // Project: Dynamic Date Selector (DtTvB) - 2006-03-16
