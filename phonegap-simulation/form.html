@@ -162,21 +162,43 @@
     <script type="text/javascript">
 
         function onDeviceReady() {
-
-            // var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-            //     // don't call successCB,just insert
-            //     //db.transaction(populateDB, errorCB, successCB);
-            //     db.transaction(populateDB, errorCB);
-             }
+            var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+            db.transaction(populateDB, errorCB);
+        }
 
         //reads data base when starts index.html
         onDeviceReady();
+
+        ///////////////////global variables/////////////////////
         var currentRow;
         var value = -1;
         var response = '';
         var ID = '';
+        // array for handling string to hide or show
         var html_classes = [];
+        // gets textarea ids and values
+        var inputs = document.querySelector('.data-input').getElementsByTagName('textarea');
+        // string builder for db queries
+        var buildString = '';
+        var string_queries = [
+        //0 create table
+        'CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT,',
+        ];
 
+        ///////////////////populateDB/////////////////////////////
+        function populateDB(tx) {
+            buildString = '';
+            // 0 CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT,
+            buildString = string_queries[0];
+            buildString += getAllIDFromInputs();
+            // execute query
+            tx.executeSql(buildString);
+        }
+
+        ///////////////////errorCB/////////////////////////////
+        function errorCB(err) {
+           alert("Error processing SQL: " + err.code);
+        }
 
         ///////////////////////////////hide group of classes from html/////////////////////////////
         function hide(array) {
@@ -236,6 +258,20 @@
             } else {
                 return false;
             }
+        }
+
+
+        ///////////////////getallidsfromtextearea/////////////////////////////
+        function getAllIDFromInputs() {
+            var tempString = '';
+            for (var i = 0; i < inputs.length; i++) {
+                if (i === (inputs.length - 1) ) {
+                    tempString += inputs[i].id + ',' + 'date' + ')';
+                } else {
+                    tempString += inputs[i].id + ',';
+                }
+            }
+            return tempString
         }
 
         /////////////////Calendar//////////////////////////////////////////////////////////
