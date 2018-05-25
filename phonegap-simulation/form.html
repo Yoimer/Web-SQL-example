@@ -145,7 +145,7 @@
     <!-- insertdb-home -->
     <div class="insertdb-home">
         <button id="" onclick="">Insert</button>
-        <button id="" onclick="">Home</button>
+        <button id="" onclick="Home()">Home</button>
     </div>
 
     <!-- Insert - Search - Show All buttons -->
@@ -211,6 +211,21 @@
                 break;
             }
         }
+
+        // home buttons
+        function Home() {
+            // hides all class except insert-search-inicio
+            //hides all (will grow as code grows)
+            html_classes = ["form-center","data-input","insertdb-home"];
+            hide(html_classes);
+            html_classes = [];
+
+            //shows insert-search-inicio
+            html_classes = ["insert-search-inicio"];
+            show(html_classes);
+            html_classes = [];
+        }
+
 
        //  // Populate the phone_gap
        //  //
