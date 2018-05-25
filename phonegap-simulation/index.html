@@ -159,13 +159,13 @@
             <button id="" onclick="goModify()">Modify</button>
             <button id="" onclick="">Delete</button>
             <button id="" onclick="">Home</button>
-            <button id="" onclick="goUpdate()">Update</button>
+            <button id="" onclick="goUpdate(1)">Update</button>
         </div>
 
     </div>
 
     <div class="update_insert-search-buttons-textarea">
-        <button id="" onclick="goUpdate()">Insert</button>
+        <button id="" onclick="goUpdate(0)">Insert</button>
         <!-- <button id="" onclick="">Search</button> -->
         <button onclick="goHome()">Home</button>
     </div>
@@ -403,7 +403,8 @@
 
 
         ///////////////////////update///////////////////////
-        function goUpdate() {
+        function goUpdate(task) {
+            value = task;
             var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
             db.transaction(update, errorCB);
         }
@@ -431,9 +432,22 @@
                 inputs[i].value = "";
             }
             alert("Data successfully updated");
+            switch(value) {
+                case 0:
+                    document.querySelector('.update_insert-search-buttons-textarea').style.display = 'none';
+                    document.querySelector('.insert-search-buttons-textarea').style.display = 'block';
+                    value = -1;
+                    break;
+                case 1:
+                    value = -1;
+                    document.getElementById('data-input').style.display = 'none';
+                    document.querySelector('.form-center').style.display = 'none';
+                    document.querySelector('.modify-delete-home').style.display = 'none';
+                    // document.getElementById('insert-search-buttons').style.display = 'block';insert-search-buttons-textarea
+                    document.querySelector('.insert-search-buttons-textarea').style.display = 'block'
+                    break;
+            }
 
-            document.querySelector('.update_insert-search-buttons-textarea').style.display = 'none';
-            document.querySelector('.insert-search-buttons-textarea').style.display = 'block';
         }
 
 
@@ -550,6 +564,7 @@
 
         ///////////////////////////////modify/////////////////////////////////////////////////////
         function goModify() {
+            alert("Text fields are now ready to be modified");
             var inputs = document.getElementById('data-input').getElementsByTagName('textarea');
             for (var i = 0; i < inputs.length; ++i) {
                 inputs[i].removeAttribute("readonly");

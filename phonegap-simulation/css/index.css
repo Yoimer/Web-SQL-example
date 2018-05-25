@@ -128,7 +128,7 @@ dd {
 /* textarea and calendar*/
 
 /* textarea*/
-#data-input {
+.data-input {
     display: none;
 }
 
