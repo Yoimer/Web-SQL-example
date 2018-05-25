@@ -74,7 +74,7 @@ dd {
   margin-left: 1em;
 }
 
-#data-input {
+.data-input {
     font-weight: bold;
 }
 
@@ -148,5 +148,9 @@ dd {
 }
 
 .modify-delete-home {
+    display: none;
+}
+
+.insertdb-home {
     display: none;
 }
