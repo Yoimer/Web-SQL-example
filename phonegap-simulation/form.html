@@ -183,6 +183,8 @@
         var string_queries = [
         //0 create table
         'CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT,',
+        //1 search query to consult if data exists in db
+        "SELECT * FROM DEMO where date = ('",
         ];
 
         ///////////////////populateDB/////////////////////////////
@@ -230,7 +232,12 @@
                 break;
                 // checks if date is empty
                 case 1:
-                    IsEmpty();
+                    if(IsEmpty() !== true) {
+                        // check if date already is in db
+                        var u = searchQueryDB();
+                        console.log(u);
+                    }
+
                 break;
             }
         }
@@ -260,7 +267,6 @@
             }
         }
 
-
         ///////////////////getallidsfromtextearea/////////////////////////////
         function getAllIDFromInputs() {
             var tempString = '';
@@ -272,6 +278,24 @@
                 }
             }
             return tempString
+        }
+
+
+        ///////////////////search query/////////////////////////////
+
+        function searchQueryDB() {
+            var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+            db.transaction(checkDateinDB, errorCB);
+        }
+
+        function checkDateinDB(tx) {
+            buildString = '';
+            buildString = string_queries[1];
+            buildString += document.forms["myForm"]["date"].value + "')";
+            // execute query
+            tx.executeSql(buildString, [], function(tx, results) {
+                var len = results.rows.length;
+            });
         }
 
         /////////////////Calendar//////////////////////////////////////////////////////////
