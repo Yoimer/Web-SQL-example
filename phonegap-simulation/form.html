@@ -234,13 +234,27 @@
                 case 1:
                     if(IsEmpty() !== true) {
                         // check if date already is in db
-                        var u = searchQueryDB();
-                        console.log(u);
-                    }
-
+                        searchQueryDB( function(callback ) {
+                            //console.log(callback);
+                            if (callback === 0) {
+                                alert("No in db");
+                            } else if (callback === 1) {
+                                alert("In db");
+                            }
+                        });
                 break;
             }
         }
+    }
+
+
+        // function dateInDB () {
+        //     var i = -1;
+        //     searchQueryDB( function (callback) {
+        //         i = callback;
+        //     });
+        //     return i;
+        // }
 
         /////////////////////home buttons/////////////////////////////
         function Home() {
@@ -283,20 +297,31 @@
 
         ///////////////////search query/////////////////////////////
 
-        function searchQueryDB() {
+        function searchQueryDB(callback) {
             var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-            db.transaction(checkDateinDB, errorCB);
-        }
-
-        function checkDateinDB(tx) {
-            buildString = '';
-            buildString = string_queries[1];
-            buildString += document.forms["myForm"]["date"].value + "')";
-            // execute query
-            tx.executeSql(buildString, [], function(tx, results) {
-                var len = results.rows.length;
+            var len = -1;
+            //db.transaction(checkDateinDB, errorCB);
+            db.transaction(function(tx) {
+                buildString = '';
+                buildString = string_queries[1];
+                buildString += document.forms["myForm"]["date"].value + "')"
+                tx.executeSql(buildString, [], function(tx, results) {
+                    // this function is called when the executeSql is ended
+                    len = results.rows.length;
+                    callback(len); // <-- call the callback when is done  
+                });
             });
         }
+
+        // function checkDateinDB(tx) {
+        //     buildString = '';
+        //     buildString = string_queries[1];
+        //     buildString += document.forms["myForm"]["date"].value + "')";
+        //     // execute query
+        //     tx.executeSql(buildString, [], function(tx, results) {
+        //         var len = results.rows.length;
+        //     });
+        // }
 
         /////////////////Calendar//////////////////////////////////////////////////////////
 
