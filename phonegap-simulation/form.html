@@ -306,6 +306,8 @@
         },errorCB);
     }
 
+
+        ///////////////////callback_execution/////////////////////////////
     // takes actions based on what callback does (similar to a 'return')
     function callback_execution(num) {
         if(num){
@@ -317,6 +319,7 @@
         }
     }
 
+    ///////////////////newEntryDB/////////////////////////////
     // insert new entry on db
     function newEntryDB() {
         var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
@@ -344,6 +347,7 @@
             }
         }
 
+        ///////////////////getRowID/////////////////////////////
         //get ID of data already saved on db
         function getRowID(num) {
             alert(num);
