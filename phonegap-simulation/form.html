@@ -233,9 +233,10 @@
                 // checks if date is empty
                 case 1:
                     if(IsEmpty() !== true) {
-                        //searchQueryDB('SELECT * from DEMO',nombreItems,'getRowLength');
+                       // check is date is already in db
+                       // if callback_execution replies back zero, there is no date in db
+                       // if callback_execution replies back one, date is already in db
                         searchQueryDB(string_queries[1], callback_execution,'getRowLength');
-                        //searchQueryDB(string_queries[1],nombreItems,'getRowID');
                     }
                 break;
         }
@@ -305,13 +306,48 @@
         },errorCB);
     }
 
+    // takes actions based on what callback does (similar to a 'return')
     function callback_execution(num) {
         if(num){
             alert('there are items');
+            searchQueryDB(string_queries[1], getRowID ,'getRowID');
         } else {
             alert('no items');
+            newEntryDB();
         }
     }
+
+    // insert new entry on db
+    function newEntryDB() {
+        var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+        db.transaction(insertDB, errorCB);
+        function insertDB(tx) {
+            buildString = '';
+            buildString += 'INSERT INTO DEMO ' + '(';
+            buildString += getAllIDFromInputs();        
+            buildString += ' VALUES ("';
+            for (var i = 0; i < inputs.length; i++) {
+                if(i === (inputs.length - 1) ) {
+                    buildString += inputs[i].value + '","' + document.forms["myForm"]["date"].value + '")';
+                    //clean values
+                    inputs[i].value = "";
+                } else {
+                    buildString += inputs[i].value + '","';
+                    //clean values
+                    inputs[i].value = "";
+                }
+            }
+            tx.executeSql(buildString);
+            //cleans date from calendar
+            document.getElementById('date_from_calendar').value = "";
+            alert("Data saved successfully");
+            }
+        }
+
+        //get ID of data already saved on db
+        function getRowID(num) {
+            alert(num);
+        }
 
         /////////////////Calendar//////////////////////////////////////////////////////////
 
