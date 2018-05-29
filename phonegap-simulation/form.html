@@ -162,7 +162,7 @@
 
     <!-- panel-modify-delete-update-home section -->
     <div class="panel-modify-delete-update-home">
-        <button id="" onclick="">Modify</button>
+        <button id="" onclick="modify()">Modify</button>
         <button id="" onclick="">Delete</button>
         <button id="" onclick="">Update</button>
         <button id="" onclick="Home()">Home</button>
@@ -249,8 +249,8 @@
                         searchQueryDB(string_queries[1], callback_execution,'getRowLength');
                     }
                 break;
+            }
         }
-    }
 
         ///////////////////////////////search buttons/////////////////////////////
         function Search(value) {
@@ -276,8 +276,8 @@
                         searchQueryDB(string_queries[1], callback_execution_search,'getRowLength');
                     }
                 break;
+            }
         }
-    }
 
         /////////////////////home buttons/////////////////////////////
         function Home() {
@@ -412,8 +412,10 @@
         ///////////////////newEntryDB/////////////////////////////
         // insert new entry on db
         function newEntryDB() {
-        var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
-        db.transaction(insertDB, errorCB);
+            var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+            db.transaction(insertDB, errorCB);
+        }
+
         function insertDB(tx) {
             buildString = '';
             buildString += 'INSERT INTO DEMO ' + '(';
@@ -434,7 +436,6 @@
             //cleans date from calendar
             document.getElementById('date_from_calendar').value = "";
             alert("Data saved successfully");
-            }
         }
 
         ///////////////////getRowID/////////////////////////////
@@ -502,6 +503,23 @@
                 inputs[i].value = textarea[inputs[i].id];
                 inputs[i].setAttribute("readonly", true);
             }
+        }
+
+        ///////////////////modify/////////////////////////////
+        function modify() {
+            if(IsEmpty() !== true) {
+                //showDataAsReadOnlyFalse();
+                searchQueryDB(string_queries[1], showDataAsReadOnlyFalse,'getValuesInDB');
+            }
+        }
+
+        ///////////////////showDataAsReadOnlyFalse/////////////////////////////
+        function showDataAsReadOnlyFalse(textarea) {
+            for(var i=0; i < inputs.length; i++) {
+                inputs[i].value = textarea[inputs[i].id];
+                inputs[i].removeAttribute("readonly");
+            }
+            alert("Text fields are now ready to be written");
         }
 
         /////////////////Calendar//////////////////////////////////////////////////////////
