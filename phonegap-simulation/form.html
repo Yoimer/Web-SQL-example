@@ -160,15 +160,12 @@
         <button id="" onclick="Home()">Home</button>
     </div>
 
-    <!-- Insert - Search - Show All buttons -->
-    <div id="tblDiv"></div>
-    <div style="text-align: left">
-        <!-- goInsert(0) means insert value from insert button-->
-        <!-- <button onclick="goInsert(0)">Insert</button> -->
-        <!-- <button onclick="goSearch()">Search</button> -->
-        <!-- <button onclick="successCB()">Show All</button> -->
-        <!-- goInsert(1) means insert value from internet-->
-        <!-- <button onclick="goInsert(1)">Fetch Data</button> -->
+    <!-- panel-modify-delete-update-home section -->
+    <div class="panel-modify-delete-update-home">
+        <button id="" onclick="">Modify</button>
+        <button id="" onclick="">Delete</button>
+        <button id="" onclick="">Update</button>
+        <button id="" onclick="Home()">Home</button>
     </div>
 
     <script type="text/javascript">
@@ -255,7 +252,6 @@
         }
     }
 
-
         ///////////////////////////////search buttons/////////////////////////////
         function Search(value) {
             switch (value) {
@@ -292,7 +288,7 @@
 
             // hides all class except insert-search-inicio
             //hides all (will grow as code grows)
-            html_classes = ["form-center","data-input","insertdb-home","update-home-buttons","searchdb-home"];
+            html_classes = ["form-center","data-input","insertdb-home","update-home-buttons","searchdb-home","panel-modify-delete-update-home"];
             hide(html_classes);
             html_classes = [];
 
@@ -384,7 +380,7 @@
                 html_classes = [];
 
                 // show textarea will grow as code grows??
-                html_classes = ["data-input"];
+                html_classes = ["data-input", "panel-modify-delete-update-home"];
                 show(html_classes);
                 html_classes = [];
 
@@ -458,15 +454,7 @@
         //update query
         function updateDB(tx) {
             buildString = '';
-            buildString = 'UPDATE DEMO SET ';
-            for (var i = 0; i < inputs.length; i++) {
-                if (i === (inputs.length - 1) ) {
-                    buildString += inputs[i].id + '=' + '"' + inputs[i].value + '"' + ' ';
-                } else {
-                    buildString += inputs[i].id + '=' + '"' + inputs[i].value + '"' +  ',' + ' ';
-                }
-            }
-            buildString += 'WHERE ID=' + ID;
+            updateQuery();
             tx.executeSql(buildString);
             alert("Updated successfully");
 
@@ -487,7 +475,20 @@
             html_classes = [];
         }
 
-        ///////////////////clean all textarea/////////////////////////////
+        //////////////////////////////updateQuery////////////////////////////////
+        function updateQuery() {
+            buildString = 'UPDATE DEMO SET ';
+            for (var i = 0; i < inputs.length; i++) {
+                if (i === (inputs.length - 1) ) {
+                    buildString += inputs[i].id + '=' + '"' + inputs[i].value + '"' + ' ';
+                } else {
+                    buildString += inputs[i].id + '=' + '"' + inputs[i].value + '"' +  ',' + ' ';
+                }
+            }
+            buildString += 'WHERE ID=' + ID;
+        }
+
+        /////////////////clean all textarea/////////////////////////////
         function cleanAllTextArea () {
             for(var i=0; i < inputs.length; i++) {
                 //clean values

@@ -162,3 +162,7 @@ dd {
 .searchdb-home {
     display: none;
 }
+
+.panel-modify-delete-update-home {
+    display: none;
+}
