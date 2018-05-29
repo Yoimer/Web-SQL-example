@@ -285,6 +285,8 @@
             document.getElementById('date_from_calendar').value = "";
             // clean textArea
             cleanAllTextArea();
+            // makeTextAreaWriteable
+            makeTextAreaWriteable();
 
             // hides all class except insert-search-inicio
             //hides all (will grow as code grows)
@@ -522,7 +524,7 @@
         }
 
         ///////////////////showDataAsReadOnlyFalseonDelete/////////////////////////////
-        function showDataAsReadOnlyFalseOnDelete() {
+        function makeTextAreaWriteable() {
             for(var i=0; i < inputs.length; i++) {
                 inputs[i].removeAttribute("readonly");
             }
@@ -564,8 +566,7 @@
             // clean all text area
             cleanAllTextArea();
             // make all textareas writeable
-            showDataAsReadOnlyFalseOnDelete();
-
+            makeTextAreaWriteable();
             alert("Item deleted successfully");
         }
 
