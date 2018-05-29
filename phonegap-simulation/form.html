@@ -148,6 +148,12 @@
         <button id="" onclick="Home()">Home</button>
     </div>
 
+    <!-- update-home-button section -->
+    <div class="update-home-buttons">
+        <button id="" onclick="updateEntryDB()">Update</button>
+        <button id="" onclick="Home()">Home</button>
+    </div>
+
     <!-- Insert - Search - Show All buttons -->
     <div id="tblDiv"></div>
     <div style="text-align: left">
@@ -236,6 +242,7 @@
                        // check is date is already in db
                        // if callback_execution replies back zero, there is no date in db
                        // if callback_execution replies back one, date is already in db
+                        //searchQueryDB(string_queries[1], callback_execution,'getRowLength');
                         searchQueryDB(string_queries[1], callback_execution,'getRowLength');
                     }
                 break;
@@ -292,13 +299,17 @@
             tx.executeSql(query,[],
             function (tx, results) {
                 switch(action) {
-                    // get row length
+                    // get row length (date validation)
                     case 'getRowLength':
                         callback(results.rows.length);
                     break;
-                    //get id from row
                     case 'getRowID':
-                        callback(results.rows.item(0).id);
+                        //get id
+                        callback(results.rows.item(0).id)
+                    break;
+                    case 'getValuesInDB':
+                        //id, all values from textarea
+                        callback(results.rows.item(0));
                     break;
                 }
             });
@@ -306,17 +317,37 @@
         },errorCB);
     }
 
-
-        ///////////////////callback_execution/////////////////////////////
+    ///////////////////callback_execution/////////////////////////////
     // takes actions based on what callback does (similar to a 'return')
     function callback_execution(num) {
         if(num){
             alert('there are items');
-            searchQueryDB(string_queries[1], getRowID ,'getRowID');
+            // quita insert-db-home
+            html_classes = ["insertdb-home"];
+            hide(html_classes);
+            html_classes = [];
+            searchQueryDB(string_queries[1], update ,'getValuesInDB');
         } else {
             alert('no items');
             newEntryDB();
         }
+    }
+
+    //////////////////update/////////////////////////////
+    function update(data_from_db) {
+        //gets row ID
+        ID = '';
+        ID = data_from_db.id;
+
+        // retrieve textarea with values from db on all of them
+        for(var i = 0; i < inputs.length; ++i) {
+            inputs[i].value = data_from_db[inputs[i].id];
+        }
+
+        //shows update-home-buttons
+        html_classes = ["update-home-buttons"];
+        show(html_classes);
+        html_classes = [];
     }
 
     ///////////////////newEntryDB/////////////////////////////
@@ -351,6 +382,54 @@
         //get ID of data already saved on db
         function getRowID(num) {
             alert(num);
+        }
+
+        ///////////////////updateEntryDB/////////////////////////////
+        //update values from id
+        function updateEntryDB() {
+            var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+            db.transaction(updateDB, errorCB);
+        }
+
+        ///////////////////updateEntryDB/////////////////////////////
+        //update query
+        function updateDB(tx) {
+            buildString = '';
+            buildString = 'UPDATE DEMO SET ';
+            for (var i = 0; i < inputs.length; i++) {
+                if (i === (inputs.length - 1) ) {
+                    buildString += inputs[i].id + '=' + '"' + inputs[i].value + '"' + ' ';
+                } else {
+                    buildString += inputs[i].id + '=' + '"' + inputs[i].value + '"' +  ',' + ' ';
+                }
+            }
+            buildString += 'WHERE ID=' + ID;
+            tx.executeSql(buildString);
+            alert("Updated successfully");
+
+            ////////// clean all fields
+            // clean calendar
+            document.getElementById('date_from_calendar').value = "";
+            // clean textArea
+            cleanAllTextArea();
+
+            //hide update-home-buttons
+            html_classes = ["update-home-buttons"];
+            hide(html_classes);
+            html_classes = [];
+
+            //shows insertdb-home buttons
+            html_classes = ["insertdb-home"];
+            show(html_classes);
+            html_classes = [];
+        }
+
+        ///////////////////clean all textarea/////////////////////////////
+        function cleanAllTextArea () {
+            for(var i=0; i < inputs.length; i++) {
+                //clean values
+                inputs[i].value = "";
+            }
         }
 
         /////////////////Calendar//////////////////////////////////////////////////////////
