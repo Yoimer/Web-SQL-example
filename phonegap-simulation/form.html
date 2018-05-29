@@ -163,7 +163,7 @@
     <!-- panel-modify-delete-update-home section -->
     <div class="panel-modify-delete-update-home">
         <button id="" onclick="modify()">Modify</button>
-        <button id="" onclick="">Delete</button>
+        <button id="" onclick="Delete()">Delete</button>
         <button id="" onclick="">Update</button>
         <button id="" onclick="Home()">Home</button>
     </div>
@@ -348,7 +348,6 @@
                         break;
                     }
                 });
-
             },errorCB);
         }
 
@@ -520,6 +519,54 @@
                 inputs[i].removeAttribute("readonly");
             }
             alert("Text fields are now ready to be written");
+        }
+
+        ///////////////////showDataAsReadOnlyFalseonDelete/////////////////////////////
+        function showDataAsReadOnlyFalseOnDelete() {
+            for(var i=0; i < inputs.length; i++) {
+                inputs[i].removeAttribute("readonly");
+            }
+        }
+
+        ///////////////////delete/////////////////////////////
+        function Delete() {
+            if(IsEmpty() !== true) {
+                searchQueryDB(string_queries[1], callback_execution_delete ,'getRowLength');
+            }
+        }
+
+    ///////////////////callback_execution_delete/////////////////////////////
+    // takes actions based on what callback does (similar to a 'return')
+        function callback_execution_delete(num) {
+            if(num){
+                alert('there are items');
+                // get id
+                searchQueryDB(string_queries[1], deleteQuery ,'getRowID');
+            } else {
+                alert('no items');
+            }
+        }
+
+        ///////////////////deleteQuery/////////////////////////////
+        function deleteQuery(id) {
+            ID = '';
+            ID = id;
+            var db = window.openDatabase("phone_gap", "0.10", "Cordova Demo", 200000);
+            db.transaction(deleterow, errorCB);
+        }
+
+        ///////////////////deleterow/////////////////////////////
+        function deleterow(tx) {
+            tx.executeSql('DELETE FROM DEMO WHERE id = ' + ID);
+
+            // cleans calendar
+            document.forms["myForm"]["date"].value = "";
+            // clean all text area
+            cleanAllTextArea();
+            // make all textareas writeable
+            showDataAsReadOnlyFalseOnDelete();
+
+            alert("Item deleted successfully");
         }
 
         /////////////////Calendar//////////////////////////////////////////////////////////
