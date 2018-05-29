@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <h1>NextWells App Version 1.6</h1>
+    <h1>NextWells App Version 1.7</h1>
     <p>New Daily Operational Report</p>
 
     <!-- Calendar form section -->
@@ -251,9 +251,14 @@
 
         /////////////////////home buttons/////////////////////////////
         function Home() {
+            // clean calendar
+            document.getElementById('date_from_calendar').value = "";
+            // clean textArea
+            cleanAllTextArea();
+
             // hides all class except insert-search-inicio
             //hides all (will grow as code grows)
-            html_classes = ["form-center","data-input","insertdb-home"];
+            html_classes = ["form-center","data-input","insertdb-home","update-home-buttons"];
             hide(html_classes);
             html_classes = [];
 
