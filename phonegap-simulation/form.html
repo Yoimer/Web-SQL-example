@@ -509,19 +509,29 @@
         ///////////////////modify/////////////////////////////
         function modify() {
             if(IsEmpty() !== true) {
-                //showDataAsReadOnlyFalse();
-                searchQueryDB(string_queries[1], showDataAsReadOnlyFalse,'getValuesInDB');
+                searchQueryDB(string_queries[1], callback_execution_modify ,'getRowLength');
+            }
+        }
+
+        ///////////////////callback_execution_modify/////////////////////////////
+        function callback_execution_modify(num) {
+            if(num){
+                //alert('there are items');
+                makeTextAreaWriteable()
+                alert("Text fields are now ready to be written");
+            } else {
+                alert('no items');
             }
         }
 
         ///////////////////showDataAsReadOnlyFalse/////////////////////////////
-        function showDataAsReadOnlyFalse(textarea) {
-            for(var i=0; i < inputs.length; i++) {
-                inputs[i].value = textarea[inputs[i].id];
-                inputs[i].removeAttribute("readonly");
-            }
-            alert("Text fields are now ready to be written");
-        }
+        // function showDataAsReadOnlyFalse(textarea) {
+        //     for(var i=0; i < inputs.length; i++) {
+        //         inputs[i].value = textarea[inputs[i].id];
+        //         inputs[i].removeAttribute("readonly");
+        //     }
+        //     alert("Text fields are now ready to be written");
+        // }
 
         ///////////////////showDataAsReadOnlyFalseonDelete/////////////////////////////
         function makeTextAreaWriteable() {
