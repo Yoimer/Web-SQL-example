@@ -665,6 +665,23 @@
                     temp += JSON.stringify(results.rows.item(i));
                     temp += '$';
                 }
+                // publish to internet
+                var url = "https://api.thingspeak.com/update?api_key=2SWY1G9MF2PCFIE9&field1=" + temp;
+                var request = new XMLHttpRequest();
+
+                // connected
+                request.onload = function() { 
+                    alert("Data saved on remote server successfully")
+                }
+
+                // no internet
+                request.onerror = function() { 
+                    alert("There is a network issue, please try later"); 
+                }
+
+                request.open("GET",url,true);
+                request.send();
+
             // data base is empty, there is nothing to publish to internet
             } else {
                 alert("There is no saved data in db");
